@@ -1,78 +1,142 @@
-cmake_minimum_required(VERSION 4.2)
-project(DevBoard_STM32L4)
+cmake_minimum_required(VERSION 3.22)
 
+# Prevent CMake from executing desktop compiler sanity checks for bare-metal
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
+# Deduce project name from directory name matching your reference flow
+get_filename_component(PROJECT_NAME_DEDUCED ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+project(${PROJECT_NAME_DEDUCED} C CXX ASM)
+
+# Toolchain specifications
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(Core/Inc)
-include_directories(Drivers/CMSIS/Core/Include)
-include_directories(Drivers/CMSIS/Device/ST/STM32L4xx/Include)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/basic_math_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/complex_math_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/controller_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/fast_math_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/filtering_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/intrinsics_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/matrix_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/statistics_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/support_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/templates)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/inc/transform_tests)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/JTest/inc)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/JTest/inc/arr_desc)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/JTest/inc/opt_arg)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/Common/JTest/inc/util)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/DspLibTest_FVP_A5/RTE)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/DspLibTest_FVP_A5/RTE/CMSIS)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/DspLibTest_FVP_A5/RTE/Device/ARMCA5)
-include_directories(Drivers/CMSIS/DSP/DSP_Lib_TestSuite/RefLibs/inc)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/arm_convolution_example)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/arm_fir_example)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/arm_graphic_equalizer_example)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/arm_linear_interp_example)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/arm_matrix_example)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/arm_signal_converge_example)
-include_directories(Drivers/CMSIS/DSP/Examples/ARM/boot)
-include_directories(Drivers/CMSIS/DSP/Include)
-include_directories(Drivers/CMSIS/DSP/PythonWrapper/cmsisdsp_pkg/src)
-include_directories(Drivers/CMSIS/Include)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/cifar10)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/cifar10/RTE/_ARMCM0)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/cifar10/RTE/_ARMCM3)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/cifar10/RTE/_ARMCM4_FP)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/cifar10/RTE/_ARMCM7_SP)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/cifar10/RTE/Compiler)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/gru)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/gru/RTE/_ARMCM0)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/gru/RTE/_ARMCM3)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/gru/RTE/_ARMCM4_FP)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/gru/RTE/_ARMCM7_SP)
-include_directories(Drivers/CMSIS/NN/Examples/ARM/arm_nn_examples/gru/RTE/Compiler)
-include_directories(Drivers/CMSIS/NN/Examples/IAR/iar_nn_examples/NN-example-cifar10)
-include_directories(Drivers/CMSIS/NN/Examples/IAR/iar_nn_examples/NN-example-gru)
-include_directories(Drivers/CMSIS/NN/Include)
-include_directories(Drivers/CMSIS/NN/NN_Lib_Tests/nn_test)
-include_directories(Drivers/CMSIS/NN/NN_Lib_Tests/nn_test/Ref_Implementations)
-include_directories(Drivers/CMSIS/NN/NN_Lib_Tests/nn_test/RTE/_ARMCM0)
-include_directories(Drivers/CMSIS/NN/NN_Lib_Tests/nn_test/RTE/_ARMCM3)
-include_directories(Drivers/CMSIS/NN/NN_Lib_Tests/nn_test/RTE/_ARMCM4_FP)
-include_directories(Drivers/CMSIS/NN/NN_Lib_Tests/nn_test/RTE/_ARMCM7_SP)
-include_directories(Drivers/CMSIS/RTOS)
-include_directories(Drivers/CMSIS/RTOS/Template)
-include_directories(Drivers/CMSIS/RTOS2/Include)
-include_directories(Drivers/CMSIS/RTOS2/Template)
-include_directories(Drivers/STM32L4xx_HAL_Driver/Inc)
-include_directories(Drivers/STM32L4xx_HAL_Driver/Inc/Legacy)
-include_directories(Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS)
-include_directories(Middlewares/Third_Party/FreeRTOS/Source/include)
-include_directories(Middlewares/Third_Party/FreeRTOS/Source/portable/IAR/ARM_CM4F)
-include_directories(user/inc)
+# Hardware Specific Parameters (STM32L476RGT6U)
+set(MCU_MODEL "STM32L476xx")
+set(CPU_PARAMETERS
+        -mcpu=cortex-m4
+        -mthumb
+        -mfpu=fpv4-sp-d16
+        -mfloat-abi=hard
+)
 
-add_executable(DevBoard_STM32L4
-        Core/Src/main.c
-        Core/Src/freertos.c
-        Core/Src/stm32l4xx_it.c
-        Core/Src/stm32l4xx_hal_msp.c
-        Core/Src/system_stm32l4xx.c
-        # if more files, add here
+# Custom GCC Linker Script and Vector Table
+set(LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/STM32L476RGTx_FLASH.ld")
+set(STARTUP_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32L4xx/Source/Templates/gcc/startup_stm32l476xx.s")
+
+# ==============================================================================
+# Source File Discovery
+# ==============================================================================
+
+# Core Application Code
+file(GLOB CORE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/*.c")
+
+# Pull in all ST HAL driver source files
+file(GLOB HAL_SOURCES_RAW "${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/*.c")
+
+# EXCLUDE template/example files from the HAL source list to prevent compilation failures
+set(HAL_SOURCES ${HAL_SOURCES_RAW})
+foreach(TMPL_FILE ${HAL_SOURCES_RAW})
+    if(${TMPL_FILE} MATCHES "template")
+        list(REMOVE_ITEM HAL_SOURCES ${TMPL_FILE})
+    endif()
+endforeach()
+
+# FreeRTOS Core & Porting Layers
+file(GLOB FREERTOS_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/*.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c"
+)
+
+# Custom application code tracking
+file(GLOB_RECURSE USER_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/user/src/*.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/user/src/*.cpp"
+)
+
+# ==============================================================================
+# Executable Build Target
+# ==============================================================================
+set(EXECUTABLE ${PROJECT_NAME})
+add_executable(${EXECUTABLE}
+        ${CORE_SOURCES}
+        ${HAL_SOURCES}
+        ${FREERTOS_SOURCES}
+        ${USER_SOURCES}
+        ${STARTUP_SCRIPT}
+)
+
+# Global Macro Definitions
+target_compile_definitions(${EXECUTABLE} PRIVATE
+        ${MCU_MODEL}
+        USE_HAL_DRIVER
+)
+
+# ==============================================================================
+# Include Directories (Using SYSTEM to silence external warnings)
+# ==============================================================================
+target_include_directories(${EXECUTABLE} SYSTEM PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
+        ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32L4xx/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS
+        ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F
+)
+
+target_include_directories(${EXECUTABLE} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/user/inc
+)
+
+# ==============================================================================
+# Warnings and Optimizations Flags
+# ==============================================================================
+
+# Relaxed warning constraints on generated/middleware components to clean up output
+set_source_files_properties(${HAL_SOURCES} ${FREERTOS_SOURCES} PROPERTIES COMPILE_OPTIONS "-w")
+
+# Strict warning checks exclusively applied to your custom logic
+set_source_files_properties(${CORE_SOURCES} ${USER_SOURCES} PROPERTIES
+        COMPILE_OPTIONS "-Wall;-Wextra;-Wno-unused-parameter"
+)
+
+target_compile_options(${EXECUTABLE} PRIVATE
+        ${CPU_PARAMETERS}
+        $<$<CONFIG:Debug>:-Og -g3 -ggdb>
+        $<$<CONFIG:Release>:-O3 -g0>
+)
+
+# ==============================================================================
+# Linker Settings
+# ==============================================================================
+target_link_options(${EXECUTABLE} PRIVATE
+        -T${LINKER_SCRIPT}
+        ${CPU_PARAMETERS}
+        -Wl,-Map=${PROJECT_NAME}.map
+        --specs=nano.specs
+        --specs=nosys.specs
+        -Wl,--gc-sections
+        -Wl,--start-group
+        -lc
+        -lm
+        -Wl,--end-group
+        -Wl,--print-memory-usage
+)
+
+# ==============================================================================
+# Post-Build Commands: Hex, Binary, and Size Calculations
+# ==============================================================================
+#add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
+#        COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${EXECUTABLE}>
+#)
+
+add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -O ihex   $<TARGET_FILE:${EXECUTABLE}> ${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE}.hex
+        COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${EXECUTABLE}> ${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE}.bin
 )

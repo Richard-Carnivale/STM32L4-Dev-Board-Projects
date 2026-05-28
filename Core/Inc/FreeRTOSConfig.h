@@ -134,7 +134,22 @@ standard names. */
 /* #define xPortSysTickHandler SysTick_Handler */
 
 /* USER CODE BEGIN Defines */
-/* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
+#ifdef configUSE_16_BIT_TICKS
+#undef configUSE_16_BIT_TICKS
+#define configUSE_16_BIT_TICKS 1
+#endif
+
+#ifndef traceISR_ENTER
+#define traceISR_ENTER()
+#endif
+
+#ifndef traceISR_EXIT
+#define traceISR_EXIT()
+#endif
+
+#ifndef traceISR_EXIT_TO_SCHEDULER
+#define traceISR_EXIT_TO_SCHEDULER()
+#endif
 /* USER CODE END Defines */
 
 #endif /* FREERTOS_CONFIG_H */

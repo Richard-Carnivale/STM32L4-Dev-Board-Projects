@@ -15,7 +15,7 @@ extern "C" {
         for (;;)
         {
             HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-            osDelay(500);
+            osDelay(200);
         }
     }
 }

@@ -108,6 +108,8 @@ set_source_files_properties(${CORE_SOURCES} ${USER_SOURCES} PROPERTIES
 
 target_compile_options(${EXECUTABLE} PRIVATE
         ${CPU_PARAMETERS}
+        -fno-exceptions
+        -fno-rtti
         $<$<CONFIG:Debug>:-Og -g3 -ggdb>
         $<$<CONFIG:Release>:-O3 -g0>
 )

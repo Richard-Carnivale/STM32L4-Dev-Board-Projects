@@ -353,7 +353,7 @@ void StartTimerTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    StartTimerTask_user(argument);
   }
   /* USER CODE END StartTimerTask */
 }

@@ -46,6 +46,7 @@ TIM_HandleTypeDef htim1;
 UART_HandleTypeDef huart2;
 
 osThreadId defaultTaskHandle;
+osThreadId timerTaskHandle;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -56,6 +57,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
 void StartDefaultTask(void const * argument);
+void StartTimerTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -121,6 +123,10 @@ int main(void)
   /* definition and creation of defaultTask */
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* definition and creation of timerTask */
+  osThreadDef(timerTask, StartTimerTask, osPriorityAboveNormal, 0, 128);
+  timerTaskHandle = osThreadCreate(osThread(timerTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -332,6 +338,24 @@ void StartDefaultTask(void const * argument)
     StartDefaultTask_user(argument);
   }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartTimerTask */
+/**
+* @brief Function implementing the timerTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTimerTask */
+void StartTimerTask(void const * argument)
+{
+  /* USER CODE BEGIN StartTimerTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartTimerTask */
 }
 
 /**

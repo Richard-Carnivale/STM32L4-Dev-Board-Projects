@@ -13,7 +13,7 @@
 extern TIM_HandleTypeDef htim1;
 
 extern "C" {
-void StartDefaultTask_user(void const *argument) {
+void StartIdleTask_user(void const *argument) {
     for (;;) {
     }
 }
@@ -51,6 +51,13 @@ void StartTimerTask_user(void const *argument) {
 
         lastButtonState = currentButtonState;
         osDelay(50);
+    }
+}
+
+void StartToggleLedTask_user(void const *argument) {
+    for (;;) {
+        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+        osDelay(500);
     }
 }
 }

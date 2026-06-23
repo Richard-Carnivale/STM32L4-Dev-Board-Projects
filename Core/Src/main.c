@@ -45,8 +45,9 @@ TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart2;
 
-osThreadId defaultTaskHandle;
+osThreadId idleTaskHandle;
 osThreadId timerTaskHandle;
+osThreadId toggleLedHandle;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -56,8 +57,9 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
-void StartDefaultTask(void const * argument);
+void StartIdleTask(void const * argument);
 void StartTimerTask(void const * argument);
+void StartToggleLed(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -120,13 +122,17 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* definition and creation of idleTask */
+  osThreadDef(idleTask, StartIdleTask, osPriorityIdle, 0, 128);
+  idleTaskHandle = osThreadCreate(osThread(idleTask), NULL);
 
   /* definition and creation of timerTask */
   osThreadDef(timerTask, StartTimerTask, osPriorityAboveNormal, 0, 128);
   timerTaskHandle = osThreadCreate(osThread(timerTask), NULL);
+
+  /* definition and creation of toggleLed */
+  osThreadDef(toggleLed, StartToggleLed, osPriorityBelowNormal, 0, 128);
+  toggleLedHandle = osThreadCreate(osThread(toggleLed), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -322,20 +328,20 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartIdleTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the idleTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+/* USER CODE END Header_StartIdleTask */
+void StartIdleTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;)
   {
-    StartDefaultTask_user(argument);
+    StartIdleTask_user(argument);
   }
   /* USER CODE END 5 */
 }
@@ -356,6 +362,24 @@ void StartTimerTask(void const * argument)
     StartTimerTask_user(argument);
   }
   /* USER CODE END StartTimerTask */
+}
+
+/* USER CODE BEGIN Header_StartToggleLed */
+/**
+* @brief Function implementing the toggleLed thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartToggleLed */
+void StartToggleLed(void const * argument)
+{
+  /* USER CODE BEGIN StartToggleLed */
+  /* Infinite loop */
+  for(;;)
+  {
+    StartToggleLedTask_user(argument);
+  }
+  /* USER CODE END StartToggleLed */
 }
 
 /**

@@ -9,8 +9,9 @@
 extern "C" {
 #endif
 
-    void StartDefaultTask_user(void const * argument);
+    void StartIdleTask_user(void const * argument);
     void StartTimerTask_user(void const * argument);
+    void StartToggleLedTask_user(void const *argument);
 
 #ifdef __cplusplus
 }
